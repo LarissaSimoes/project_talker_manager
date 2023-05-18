@@ -33,8 +33,14 @@ const readFile = async () => {
       return result;
   };
 
+  const isEmailValid = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   module.exports = {
     getAllTalkers,
     getTalkerById,
     generateRandomToken,
+    isEmailValid,
   };
