@@ -19,10 +19,10 @@ const readFile = async () => {
   const getTalkerById = async (id) => {
     const result = await readFile();
     const data = result.find((talker) => talker.id === Number(id));
-    return data
+    return data;
   };
 
   module.exports = {
     getAllTalkers,
-    getTalkerById
+    getTalkerById,
   };
