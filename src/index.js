@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllTalkers } = require('./talkerManager');
+const { getAllTalkers, getTalkerById } = require('./talkerManager');
 
 const app = express();
 app.use(express.json());
@@ -26,3 +26,14 @@ app.get('/talker', async (req, res) => {
   } 
     return res.status(200).json([]);
 });
+
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const result = await getTalkerById(id);
+  if (result) {
+    return res.status(200).json(result);
+  }
+  return res.status(404).json({
+    "message": "Pessoa palestrante não encontrada"
+  })
+})
