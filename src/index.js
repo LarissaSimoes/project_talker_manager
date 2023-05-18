@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllTalkers, getTalkerById } = require('./talkerManager');
+const { getAllTalkers, getTalkerById, generateRandomToken } = require('./talkerManager');
 
 const app = express();
 app.use(express.json());
@@ -35,5 +35,12 @@ app.get('/talker/:id', async (req, res) => {
   }
   return res.status(404).json({
     message: 'Pessoa palestrante não encontrada',
+  });
+});
+
+app.post('/login', async (req, res) => {
+  const token = generateRandomToken(16);
+  return res.status(200).json({
+    token,
   });
 });
