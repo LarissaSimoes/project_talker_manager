@@ -1,8 +1,8 @@
 const express = require('express');
 const { getAllTalkers,
   getTalkerById,
-  generateRandomToken,
-  isEmailValid } = require('./talkerManager');
+  generateRandomToken } = require('./talkerManager');
+  const { validateEmail, validadePassword } = require('./middlewares/loginValidation');
 
 const app = express();
 app.use(express.json());
@@ -41,30 +41,7 @@ app.get('/talker/:id', async (req, res) => {
   });
 });
 
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || email.trim() === '') {
-    return res.status(400).json({
-      message: 'O campo "email" é obrigatório'
-    });
-  }
-  if (!isEmailValid(email)) {
-    return res.status(400).json({
-      message: 'O "email" deve ter o formato "email@email.com"'
-    });
-  }
-  if (!password || password.trim() === '') {
-    return res.status(400).json({
-      message: 'O campo "password" é obrigatório'
-    });
-  }
-  if (password.length < 6) {
-    return res.status(400).json({
-      message: 'O "password" deve ter pelo menos 6 caracteres'
-    });
-  }
+app.post('/login', validateEmail, validadePassword, (req, res) => {
   const token = generateRandomToken(16);
-  return res.status(200).json({
-    token,
-  });
+  return res.status(200).json({ token });
 });
