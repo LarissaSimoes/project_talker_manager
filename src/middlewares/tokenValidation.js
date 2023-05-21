@@ -4,7 +4,6 @@ const tokenValidation = (req, res, next) => {
       return res.status(401).json({ message: 'Token não encontrado' });
     }
 
-  
     if (token.length !== 16 || typeof token !== 'string') {
       return res.status(401).json({ message: 'Token inválido' });
     }
@@ -12,7 +11,6 @@ const tokenValidation = (req, res, next) => {
     next();
   };
   
-
 module.exports = {
     tokenValidation,
   };

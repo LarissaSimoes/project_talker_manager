@@ -13,10 +13,11 @@ const watchedAtValidation = (req, res, next) => {
       }
     const watchedAtRegex = /^\d{2}\/\d{2}\/\d{4}$/;
     if (!watchedAtRegex.test(watchedAt)) {
-        return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+        return res.status(400)
+        .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
       }
       next();
-}
+};
 
 const rateValidation = (req, res, next) => {
     const { rate } = req.body.talk;
@@ -24,13 +25,14 @@ const rateValidation = (req, res, next) => {
         return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
       }
     if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
-        return res.status(400).json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' });
+        return res.status(400)
+        .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' });
       }
       next(); 
-}
+};
 
 module.exports = {
     talkValidation,
     watchedAtValidation,
     rateValidation,
-}
+};
