@@ -19,12 +19,16 @@ const watchedAtValidation = (req, res, next) => {
       next();
 };
 
+const isRateEmpty = (rate) => !rate && rate !== 0;
+
+const isRateValid = (rate) => Number.isInteger(rate) && rate >= 1 && rate <= 5;
+
 const rateValidation = (req, res, next) => {
     const { rate } = req.body.talk;
-    if (!rate && rate !== 0) {
+    if (isRateEmpty(rate)) {
         return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
       }
-    if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
+    if (!isRateValid(rate)) {
         return res.status(400)
         .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' });
       }
