@@ -97,3 +97,17 @@ app.post('/talker',
   await fs.writeFile(FILENAME, JSON.stringify(talkers));
   return res.status(200).json(updatedTalker);
  });
+
+ app.delete('/talker/:id',
+  tokenValidation,
+  async (req, res) => {
+    const { id } = req.params;
+    const talkers = await getAllTalkers();
+    const index = talkers.findIndex((talker) => talker.id === +id);
+    if (!index) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+    talkers.splice(index, 1);
+    await fs.writeFile(FILENAME, JSON.stringify(talkers));
+      return res.status(204).end();
+    });
