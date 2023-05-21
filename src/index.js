@@ -1,8 +1,15 @@
 const express = require('express');
+const fs = require('fs').promises;
 const { getAllTalkers,
   getTalkerById,
   generateRandomToken } = require('./talkerManager');
   const { validateEmail, validadePassword } = require('./middlewares/loginValidation');
+  const { tokenValidation } = require('./middlewares/tokenValidation');
+const { nameValidation } = require('./middlewares/nameValidation');
+const { ageValidation } = require('./middlewares/ageValidation');
+const { talkValidation,
+   watchedAtValidation,
+   rateValidation } = require('./middlewares/talkValidation');
 
 const app = express();
 app.use(express.json());
@@ -45,3 +52,19 @@ app.post('/login', validateEmail, validadePassword, (req, res) => {
   const token = generateRandomToken(16);
   return res.status(200).json({ token });
 });
+
+app.post('/talker',
+ nameValidation,
+ tokenValidation,
+ ageValidation,
+ talkValidation,
+ watchedAtValidation,
+ rateValidation,
+ async (req, res) => {
+  const talkers = await getAllTalkers();
+  const { name, age, talk } = req.body;
+  const newTalker = { id: talkers.length + 1, name, age, talk };
+  talkers.push(newTalker);
+  await fs.writeFile('src/talker.json', JSON.stringify(talkers));
+  return res.status(201).json(newTalker);
+ });
