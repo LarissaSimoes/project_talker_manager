@@ -26,6 +26,8 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
+const FILENAME = 'src/talker.json';
+
 app.get('/talker', async (req, res) => {
   const talkers = await getAllTalkers();
 
@@ -65,6 +67,33 @@ app.post('/talker',
   const { name, age, talk } = req.body;
   const newTalker = { id: talkers.length + 1, name, age, talk };
   talkers.push(newTalker);
-  await fs.writeFile('src/talker.json', JSON.stringify(talkers));
+  await fs.writeFile(FILENAME, JSON.stringify(talkers));
   return res.status(201).json(newTalker);
+ });
+
+ app.put('/talker/:id',
+ nameValidation,
+ tokenValidation,
+ ageValidation,
+ talkValidation,
+ watchedAtValidation,
+ rateValidation,
+ async (req, res) => {
+  const { id } = req.params;
+  const talkers = await getAllTalkers();
+  const findTalker = talkers.find((talker) => talker.id === +id);
+  if (!findTalker) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  const { name, age, talk } = req.body;
+  const updatedTalker = {
+    id: +id,
+    name,
+    age,
+    talk,
+  };
+  const index = talkers.indexOf(findTalker);
+  talkers[index] = updatedTalker;
+  await fs.writeFile(FILENAME, JSON.stringify(talkers));
+  return res.status(200).json(updatedTalker);
  });
